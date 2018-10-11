@@ -130,9 +130,13 @@ The code for curvature and position calculation is in the defination of Lane Cla
         xm_per_pix = 3.7/700 # meters per pixel in x dimension
 ```
 Considering our polynomial function looks like:
-![alt text][image7]
+
+<img src="./Writeup_images/f_y_equation.png" width="180" />
+
 the radius can be calculated using the following equation:
-![alt text][image6]
+
+<img src="./Writeup_images/R_equation_A_B_coef.png" width="180" />
+
 The position of vehicle with respect to the center of lane can be evaluated by calculating the mean value of the positions that the fitted lines intersect with the bottom of the image:
 ```
 deviation = (1280*xm_per_pix)/2. - (right_lane_pos + left_lane_pos)/2.
