@@ -36,7 +36,7 @@ The goals / steps of this project are the following:
 
 ### Camera Calibration
 
-#### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
+#### 1. Computing the camera matrix and distortion coefficients. 
 
 The code for this step is contained in the first two code cells of the IPython notebook located in "./Lane_Detection.ipynb". 
 The camera calibration step is aimed to remove the image distortion from the camera. In order to calibrate the camera, several checkborad images taken by the same camera are placed in the folder `./cameral_cal/`.
