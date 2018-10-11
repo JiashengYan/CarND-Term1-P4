@@ -42,9 +42,13 @@ The goals / steps of this project are the following:
 The code for this step is contained in the first two code cells of the IPython notebook located in "./Lane_Detection.ipynb". 
 The camera calibration step is aimed to remove the image distortion from the camera. In order to calibrate the camera, several checkborad images taken by the same camera are placed in the folder `./cameral_cal/`.
 
-I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
+I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world and "image points", which are detected by `cv2.findChessboardCorners` function.
+```
+ret, corners = cv2.findChessboardCorners(gray, (9,6),None)
+```
 
-I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
+
+I then used the `cv2.calibrateCamera()` function and `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients. I applied this distortion correction to the checkboard image using the `cv2.undistort()` function and obtained this result: 
 
 ![alt text][image1]
 
@@ -65,7 +69,7 @@ undist = cv2.undistort(img, mtx, dist, None, mtx)
 #### 2. Using color transforms, gradients or other methods to create a thresholded binary image. 
 
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps in code cell 145 in "./Lane_Detection.ipynb").  
-My first step is to convert the image into other color space like HSL and HSV, then filters like value threshold, gradient threshold and their combination are applied to the original images. Their threshold parameters are optimised and compared through the entire video.
+My first step is to convert the image into other color space like HSL and HSV, then filters such as: value threshold, gradient threshold and their combination are applied to the original images. Their threshold parameters are optimised and compared through an entire video.
 
 The result was recorded in the following youtube video:
 <p align="center">
@@ -83,7 +87,7 @@ The follwing filters are included in the video as their results are better than 
 * Saturation & Value Filter
 * Lightness Sobel X & -Lightness Sobel y Filter
 
-In order to get a accurate and stable lane detection, the filter was designed as following:
+In order to get an accurate and stable lane detection, the filter was designed as following:
 ~~~
 (HSL-Saturation Filter & HSL-Saturation Sobel X Filter) or (HSV-Value Filter & HSL-Lightness Sobel X Filter) or ( Lightness Sobel X & not(Lightness Sobel y Filter)) or (HSV-Value Filter & HSL-Saturation Filter)                                
 ~~~                                             
@@ -92,7 +96,7 @@ Here's an example of my output for this step.
 
 #### 3. Perspective Transform.
 
-The code for my perspective transform is in the code cell 147.  `cv2.getPerspectiveTransform` function takes four points in the source (`src`) and destination (`dst`) points and return the transformation matrix for the transition from these two coordinates. The test image with straight lanes in the folder `./test_images/` are very helpful here, as it's easy to select four points that can form a rectangle in the destination coordinate.
+The code for my perspective transform is contained in the code cell 147.  `cv2.getPerspectiveTransform` function takes four points in the source (`src`) and destination (`dst`) points and return the transformation matrix for the transition from these two coordinates. The test image with straight lanes in the folder `./test_images/` are very helpful here, as it's easy to select four points that can form a rectangle in the destination coordinate.
 
 ```python
 src = np.float32([[581,461], [702,461], [1105,720], [205,720]])
@@ -110,6 +114,9 @@ This resulted in the following source and destination points:
 | 205,720      | 350, 720        |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
+```
+warped = cv2.warpPerspective(undist, M, img_size, flags=cv2.INTER_LINEAR)
+```
 
 ![alt text][image5]
 
@@ -121,9 +128,17 @@ The procedures to detect lane pixels are:
 * Repeat the above step and moving the sliding window up by the amount of the window height, until it reaches to the height of the image.
 * Position of points located in each left windows will be save in `leftx, lefty` and points in right windos in `rightx, righty`
 
-Then the detected points are used to fit two 2nd order polynomial that represent the left and right lanes:
-
-![alt text][image4]
+Then the detected points are used to fit two 2nd order polynomial that represent the left and right lanes.
+```
+    left_fit = np.polyfit(lefty,leftx,2)
+    right_fit = np.polyfit(righty,rightx,2)
+```
+The result was recorded in the following youtube video (yellow curves represent the detected lanes from current image, blue curves represent smoothed lanes):
+<p align="center">
+<a href="https://www.youtube.com/watch?v=27TZ3_1-Bdc&feature=youtu.be
+" target="_blank"><img src="./Writeup_images/LaneDetection.jpg"
+alt="IMAGE ALT TEXT HERE" width="960" height="540" border="10"/></a>
+</p>
 
 #### 5. Calculating the radius of curvature of the lane and the position of the vehicle with respect to center.
 
@@ -165,6 +180,7 @@ In comparing to the pipeline for single image, the detected lanes in an entire v
 * Minimum wideness
 The the detected curves can be used to update the fit parameter of the lane, the storee parameter is a weighted mean value between previous fitted parameters and current ones, The weightness of the old parameters decrease with the time so that the delay can be minimized. The length of its memory can be set through the parameter `memorylen` during the initialization of Lane instance.
 
+Here's a [link to my video result]("https://www.youtube.com/watch?v=-m1EjyGkILM&feature=youtu.be")
 
 ---
 
