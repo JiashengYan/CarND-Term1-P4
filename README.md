@@ -180,12 +180,11 @@ In comparing to the pipeline for single image, the detected lanes in an entire v
 * Minimum wideness
 The the detected curves can be used to update the fit parameter of the lane, the storee parameter is a weighted mean value between previous fitted parameters and current ones, The weightness of the old parameters decrease with the time so that the delay can be minimized. The length of its memory can be set through the parameter `memorylen` during the initialization of Lane instance.
 
-Here's a [link to my video result]("https://www.youtube.com/watch?v=-m1EjyGkILM&feature=youtu.be")
+Here's a [link to my video result](https://www.youtube.com/watch?v=-m1EjyGkILM&feature=youtu.be)
 
 ---
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
-
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+* A good initial lane detection is essential for my code to work properly as it is not yet able to distinguish lanes from other traces along the driving direction. 
+* In extreme illumination condition， the filter cannot return enough accurate points to fit the polynomial.
