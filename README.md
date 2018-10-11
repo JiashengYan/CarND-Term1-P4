@@ -68,7 +68,7 @@ My first step is to convert the image into other color space like HSL and HSV, t
 The result was recorded in the following youtube video:
 <p align="center">
 <a href="https://www.youtube.com/watch?v=nIV7KDcXLlE&feature=youtu.be
-" target="_blank"><img src=[image3]
+" target="_blank"><img src="./Writeup_images/FilterResult.jpg"
 alt="IMAGE ALT TEXT HERE" width="480" height="360" border="10"/></a>
 </p>
 The follwing filters are included in the video as their results are better than other filters like Sobel Direction:
