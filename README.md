@@ -19,13 +19,14 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 
 [image1]: ./Writeup_images/undistort.png "Undistorted"
-[image2]: ./Writeup_images/Undistort2.png "Undistorted_road_image"
+[image2]: ./Writeup_images/Undistorted2.png "Undistorted_road_image"
 [image3]: ./Writeup_images/FilterResult.jpg "FilterResult"
 [image4]: ./Writeup_images/LaneDetection.jpg "LaneDetection"
 [image5]: ./Writeup_images/Warp.png "Warp"
 [image6]: ./Writeup_images/R_equation_A_B_coef.png "R_equation_A_B_coef"
 [image7]: ./Writeup_images/f_y_equation.png "f_y_equation"
 [image8]: ./output_images/test_result3.jpg "test_result3"
+[image9]: ./Writeup_images/Binary.png "Binary"
 
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -52,6 +53,7 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 #### 1. Distortion Correction.
 
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
+
 ![alt text][image2]
 ```
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, img.shape[1::-1],None,None)
@@ -69,9 +71,10 @@ The result was recorded in the following youtube video:
 <p align="center">
 <a href="https://www.youtube.com/watch?v=nIV7KDcXLlE&feature=youtu.be
 " target="_blank"><img src="./Writeup_images/FilterResult.jpg"
-alt="IMAGE ALT TEXT HERE" width="480" height="360" border="10"/></a>
+alt="IMAGE ALT TEXT HERE" width="960" height="540" border="10"/></a>
 </p>
-The follwing filters are included in the video as their results are better than other filters like Sobel Direction:
+The follwing filters are included in the video as their results are better than other filters such as Sobel Direction:
+
 * HSL-Saturation Filter
 * HSL-Saturation Sobel X Filter
 * HSL-Lightness Sobel X Filter
@@ -85,7 +88,7 @@ In order to get a accurate and stable lane detection, the filter was designed as
 (HSL-Saturation Filter & HSL-Saturation Sobel X Filter) or (HSV-Value Filter & HSL-Lightness Sobel X Filter) or ( Lightness Sobel X & not(Lightness Sobel y Filter)) or (HSV-Value Filter & HSL-Saturation Filter)                                
 ~~~                                             
 Here's an example of my output for this step. 
-![alt text][image3]
+![alt text][image9]
 
 #### 3. Perspective Transform.
 
@@ -114,7 +117,7 @@ I verified that my perspective transform was working as expected by drawing the 
 The procedures to detect lane pixels are:
 * Select the bottom half of the image, and obtain a histogram for the intensity as a function of the X value.
 * Identify the two peaks on the left and right side. These two peaks will be used as the initial position of the sliding windows for the left and right lane lines.
-    * Apply a sliding window with certain width and height to the left and right lane lines. All the points that are located inside the left or right sliding windows are recorded separately. If the sum of the detected points in a window exceed a threshold, the following window will be recenter according to the mean value of points in this window.
+* Apply a sliding window with certain width and height to the left and right lane lines. All the points that are located inside the left or right sliding windows are recorded separately. If the sum of the detected points in a window exceed a threshold, the following window will be recenter according to the mean value of points in this window.
 * Repeat the above step and moving the sliding window up by the amount of the window height, until it reaches to the height of the image.
 * Position of points located in each left windows will be save in `leftx, lefty` and points in right windos in `rightx, righty`
 
